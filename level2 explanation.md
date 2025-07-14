@@ -1,42 +1,60 @@
-Level 2: Stored XSS - Sneaky Injection
-📝 Mission Description:
+Google XSS Game – Level 2: Stored XSS
 
-    Web applications often store user input in databases (server-side or client-side) and then render it back into the page.
-    This level demonstrates how easily XSS bugs can be introduced in such apps when input is not properly sanitized.
+Level Type: Stored XSS – Inside blockquote HTML tag
+Difficulty: Beginner
+🔗 Level URL
 
-🎯 Mission Objective:
+https://xss-game.appspot.com/level2/frame
+🧪 Steps (My Approach)
 
-Inject JavaScript to trigger an alert() popup within the application’s context.
-Note: Since the input is stored, the script will execute on every reload — this is a case of Stored XSS.
-🔍 Vulnerability Type:
+    ✅ Typed flex0hi → reflected as:
 
-    Stored XSS
+<blockquote>flex0hi</blockquote>
 
-    HTML injection via user-submitted content
+❌ Not executable – just plain text
 
-    Rendering without proper escaping
+✅ Tried breaking the tag using:
 
-🔗 Test Cases Tried:
-Attempt	Reflected As	Result
-flex0hi	<blockquote>flex0hi</blockquote>	Not executed
-hi">	<blockquote>hi"></blockquote>	Breaks attribute
-<img src=x onerror="alert(1)">	✅ Injected & Executed	✅ Success
-✅ Final Payload Used:
+hi">
+
+→ Output:
+
+<blockquote>hi"></blockquote>
+
+❌ Still nothing triggered – but it showed we can break out of attributes
+
+✅ Injected XSS via <img> tag:
+
+    <img src=x onerror="alert(1)">
+
+    🎉 Success! Alert triggered and XSS was stored in the page
+
+✅ Final Payload
 
 <img src=x onerror="alert(1)">
 
-The onerror attribute triggers the alert when the image fails to load.
-🔁 Persistence Check:
+This payload is stored and executed every time the page is loaded → proves it’s a Stored XSS.
+🛠 Tools
 
-    After injecting the payload, refreshing the page still shows the alert.
+    Manual testing in browser
 
-    This proves it’s stored in the application’s state and replayed on load.
+    Checked source using DevTools
 
-🧠 Explanation:
+    Used classic tag-based injection (img + onerror)
 
-    The input is inserted inside a <blockquote> tag, and there's no sanitization.
+🎯 Goal
 
-    Closing the tag or breaking out with malformed attributes makes script injection possible.
+Trigger a JavaScript alert using stored XSS inside a blockquote element.
+🧠 Notes
 
-    Using the img tag with a broken source and onerror is a classic, stealthy XSS method.
+    Application reflects input inside:
 
+    <blockquote>[USER_INPUT]</blockquote>
+
+    No filtering on tags like <img>
+
+    Using onerror is a safe bypass when <script> is blocked
+
+    Closing tags not required in this level
+
+✅ Status: Solved
