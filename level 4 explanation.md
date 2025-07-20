@@ -7,7 +7,6 @@ Every piece of user-supplied data must be properly escaped depending on the cont
 #### 🎯 Mission Objective
 Inject JavaScript code that triggers an `alert()` popup.
 
----
 ```
 ### 🪜 Steps
 
@@ -78,4 +77,4 @@ And it gets rendered as:
 ---
 
 **Status: Solved ✅**
-```
+
