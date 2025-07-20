@@ -8,14 +8,14 @@ Every piece of user-supplied data must be properly escaped depending on the cont
 Inject JavaScript code that triggers an `alert()` popup.
 
 ---
-
+```
 ### 🪜 Steps
 
 - We checked the source code and found this line:
 
   ```html
   <img src="/static/loading.gif" onload="startTimer('3');" />
-  ```
+  
 
 - This is where we’ll inject our payload — specifically inside the `onload` attribute.
 
